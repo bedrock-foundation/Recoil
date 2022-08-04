@@ -1,0 +1,14 @@
+{
+  "name": "@bedrock-foundation/react-sdk-oss",
+  "description": "This is the internal package.json enabling CommonJS module",
+  "main": "src/index.ts",
+  "haste_commonjs": true,
+  "files": [
+    "src/index.ts"
+  ],
+  "directories": {
+    "": "./"
+  },
+  "repository": "https://github.com/bedrock-foundation/bedrock",
+  "license": "MIT"
+}

@@ -13,6 +13,7 @@ import {babel} from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import typescript from 'rollup-plugin-typescript2';
 import path from 'path';
 import {terser} from 'rollup-plugin-terser';
 import {projectRootDir} from './project-root-dir.mjs';
@@ -25,6 +26,8 @@ const externalLibs = [
   'transit-js',
   'relay-runtime',
   'react-relay',
+  '@solana/web3.js',
+  'socket.io-client',
 ];
 
 const defaultNodeResolveConfig = {};
@@ -77,6 +80,9 @@ const commonPlugins = [
   }),
   nodeResolvePlugin,
   commonjs(),
+  typescript({
+    tsconfig: 'packages/react-sdk/tsconfig.json',
+  }),
 ];
 
 const developmentPlugins = [
@@ -96,11 +102,12 @@ const productionPlugins = [
 
 const nativePlugins = commonPlugins.map(plugin =>
   // Replace the default nodeResolvePlugin
-  plugin !== nodeResolvePlugin ? plugin :
-    nodeResolve({
-      ...defaultNodeResolveConfig,
-      extensions: ['.native.js', '.js'],
-    })
+  plugin !== nodeResolvePlugin
+    ? plugin
+    : nodeResolve({
+        ...defaultNodeResolveConfig,
+        extensions: ['.native.js', '.js'],
+      }),
 );
 
 export function createInputOption(buildType, folder, inputFile) {
@@ -116,19 +123,19 @@ export function createInputOption(buildType, folder, inputFile) {
         input: `packages/${folder}/${inputFile}`,
         external: externalLibs,
         plugins: developmentPlugins,
-        };
+      };
     case 'prod':
       return {
         input: `packages/${folder}/${inputFile}`,
         external: externalLibs,
         plugins: productionPlugins,
-        };
+      };
     case 'native':
       return {
         input: `packages/${folder}/${inputFile}`,
         external: externalLibs,
         plugins: nativePlugins,
-        };
+      };
     default:
       throw new Error(`Unknown input type: ${buildType}`);
   }

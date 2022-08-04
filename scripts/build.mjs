@@ -19,41 +19,14 @@ import {createErrorHandler} from './utils.mjs';
 const BUILD_TARGET = 'build';
 
 const PACKAGES = {
-  recoil: {
-    inputFile: 'Recoil_index.js',
-    umdName: 'Recoil',
+  'react-sdk': {
+    inputFile: 'src/index.ts',
+    umdName: 'react-sdk',
     builds: {
       common: ['cjs', 'es'],
       dev: ['umd'],
       prod: ['es-browsers', 'umd-prod'],
       native: ['native'],
-    },
-  },
-  refine: {
-    inputFile: 'Refine_index.js',
-    umdName: 'Refine',
-    builds: {
-      common: ['cjs', 'es'],
-      dev: ['umd'],
-      prod: ['es-browsers', 'umd-prod'],
-    },
-  },
-  'recoil-sync': {
-    inputFile: 'RecoilSync_index.js',
-    umdName: 'RecoilSync',
-    builds: {
-      common: ['cjs', 'es'],
-      dev: ['umd'],
-      prod: ['es-browsers', 'umd-prod'],
-    },
-  },
-  'recoil-relay': {
-    inputFile: 'RecoilRelay_index.js',
-    umdName: 'RecoilRelay',
-    builds: {
-      common: ['cjs', 'es'],
-      dev: ['umd'],
-      prod: ['es-browsers', 'umd-prod'],
     },
   },
 };
@@ -115,28 +88,28 @@ async function buildPackage(target, config) {
     createErrorHandler('Failed to copy LICENSE'),
   );
 
-  console.log('Copying index.d.ts for TypeScript support...');
-  fs.copyFile(
-    `${projectRootDir}/typescript/${target}.d.ts`,
-    `${BUILD_TARGET}/${target}/index.d.ts`,
-    fs.constants.COPYFILE_FICLONE,
-    createErrorHandler(
-      `Failed to copy ${target}.d.ts for TypeScript index.d.ts`,
-    ),
-  );
+  // console.log('Copying index.d.ts for TypeScript support...');
+  // fs.copyFile(
+  //   `${projectRootDir}/typescript/${target}.d.ts`,
+  //   `${BUILD_TARGET}/${target}/index.d.ts`,
+  //   fs.constants.COPYFILE_FICLONE,
+  //   createErrorHandler(
+  //     `Failed to copy ${target}.d.ts for TypeScript index.d.ts`,
+  //   ),
+  // );
 
-  console.log('Generating Flow type files...');
-  exec(
-    `npx flow-copy-source packages/${target} ${BUILD_TARGET}/${target}/cjs`,
-    err => {
-      createErrorHandler('Failed to copy source files for Flow types')(err);
-      fs.rename(
-        `${BUILD_TARGET}/${target}/cjs/${config.inputFile}.flow`,
-        `${BUILD_TARGET}/${target}/cjs/index.js.flow`,
-        createErrorHandler(`Failed to rename ${config.inputFile}.js.flow`),
-      );
-    },
-  );
+  // console.log('Generating Flow type files...');
+  // exec(
+  //   `npx flow-copy-source packages/${target} ${BUILD_TARGET}/${target}/cjs`,
+  //   err => {
+  //     createErrorHandler('Failed to copy source files for Flow types')(err);
+  //     fs.rename(
+  //       `${BUILD_TARGET}/${target}/cjs/${config.inputFile}.flow`,
+  //       `${BUILD_TARGET}/${target}/cjs/index.js.flow`,
+  //       createErrorHandler(`Failed to rename ${config.inputFile}.js.flow`),
+  //     );
+  //   },
+  // );
   console.log(`Successfully built ${target}!\n`);
 }
 
